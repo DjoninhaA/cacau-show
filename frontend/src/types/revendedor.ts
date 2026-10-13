@@ -3,6 +3,7 @@ export type StatusHealth = "vermelho" | "amarelo" | "verde";
 export interface Revendedor {
   id: string;
   nomeEmpresa: string;
+  cnpj: string; // apenas dígitos
   responsavel: string;
   contato: string; // apenas dígitos
   email: string;
@@ -15,5 +16,5 @@ export interface Revendedor {
 
 export type DadosRevendedor = Pick<
   Revendedor,
-  "nomeEmpresa" | "responsavel" | "contato" | "email" | "criteriosMarcados"
+  "nomeEmpresa" | "cnpj" | "responsavel" | "contato" | "email" | "criteriosMarcados"
 >;

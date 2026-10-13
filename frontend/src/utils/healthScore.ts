@@ -1,4 +1,4 @@
-import { CRITERIOS } from "../config/criterios";
+import { CRITERIOS, type Criterio } from "../config/criterios";
 import { FAIXAS } from "../config/faixas";
 import type { StatusHealth } from "../types/revendedor";
 
@@ -9,9 +9,18 @@ export function criteriosValidos(marcados: string[]): string[] {
   return marcados.filter((id) => IDS_VALIDOS.has(id));
 }
 
-export function calcularHealthScore(marcados: string[], total = CRITERIOS.length) {
-  const pontos = criteriosValidos(marcados).length;
-  const nota = total === 0 ? 0 : Math.round((pontos / total) * 10);
+// nota = (positivos marcados − negativos marcados) ÷ total de positivos × 10, entre 0 e 10.
+export function calcularHealthScore(marcados: string[], criterios: Criterio[] = CRITERIOS) {
+  const selecionados = new Set(marcados);
+  const contar = (tipo: Criterio["tipo"], soMarcados: boolean) =>
+    criterios.filter((c) => c.tipo === tipo && (!soMarcados || selecionados.has(c.id))).length;
+
+  const positivos = contar("positivo", true);
+  const negativos = contar("negativo", true);
+  const totalPositivos = contar("positivo", false);
+
+  const pontos = Math.max(0, positivos - negativos);
+  const nota = totalPositivos === 0 ? 0 : Math.min(10, Math.round((pontos / totalPositivos) * 10));
   const faixa = FAIXAS.find((f) => nota >= f.min && nota <= f.max) ?? FAIXAS[0];
-  return { nota, status: faixa.status as StatusHealth, pontos, total };
+  return { nota, status: faixa.status as StatusHealth, positivos, negativos, totalPositivos };
 }

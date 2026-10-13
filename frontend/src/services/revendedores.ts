@@ -26,6 +26,11 @@ function gravar(lista: Revendedor[]) {
   localStorage.setItem(CHAVE, JSON.stringify(lista));
 }
 
+// Cadastros anteriores ao campo CNPJ chegam sem ele.
+function comCampos(r: Revendedor): Revendedor {
+  return { ...r, cnpj: r.cnpj ?? "" };
+}
+
 // Nota e status sempre derivados dos critérios, para refletir mudanças na configuração.
 function comNota<T extends Pick<Revendedor, "criteriosMarcados">>(r: T) {
   const { nota, status } = calcularHealthScore(r.criteriosMarcados);
@@ -33,7 +38,7 @@ function comNota<T extends Pick<Revendedor, "criteriosMarcados">>(r: T) {
 }
 
 export async function listar(): Promise<Revendedor[]> {
-  return ler().map(comNota);
+  return ler().map(comCampos).map(comNota);
 }
 
 export async function criar(dados: DadosRevendedor): Promise<Revendedor> {

@@ -7,7 +7,7 @@ interface Props {
 }
 
 export function CardNota({ marcados }: Props) {
-  const { nota, status, pontos, total } = calcularHealthScore(marcados);
+  const { nota, status, positivos, negativos, totalPositivos } = calcularHealthScore(marcados);
   const faixa = faixaDoStatus(status);
 
   return (
@@ -33,7 +33,8 @@ export function CardNota({ marcados }: Props) {
         />
       </div>
       <p className="mt-2 text-xs text-stone-500">
-        {pontos} de {total} {total === 1 ? "critério marcado" : "critérios marcados"}
+        {positivos} de {totalPositivos} {totalPositivos === 1 ? "positivo" : "positivos"} ·{" "}
+        {negativos} {negativos === 1 ? "ponto de atenção" : "pontos de atenção"}
       </p>
     </div>
   );
