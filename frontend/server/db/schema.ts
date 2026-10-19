@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { char, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
 
@@ -23,7 +23,6 @@ export const sessions = pgTable("sessions", {
 export const resellers = pgTable("resellers", {
   id: uuid("id").primaryKey().defaultRandom(),
   companyName: text("company_name").notNull(),
-  cnpj: char("cnpj", { length: 14 }).notNull(),
   contactName: text("contact_name").notNull(),
   phone: varchar("phone", { length: 11 }).notNull(),
   email: text("email").notNull(),

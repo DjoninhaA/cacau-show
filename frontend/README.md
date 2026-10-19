@@ -25,6 +25,6 @@ Root Directory = `frontend`. Defina `DATABASE_URL` nas variáveis do projeto. A 
 
 - **Critérios do checklist:** `shared/criteria.ts`. Novos itens aparecem no painel e entram no cálculo automaticamente.
 - **Faixas de cor:** `shared/bands.ts`.
-- **Regras compartilhadas com o backend** (cálculo da nota, validação de CNPJ, schema da API): `shared/`. Plano do backend em [`../docs/plano-backend.md`](../docs/plano-backend.md).
+- **Regras compartilhadas com o backend** (cálculo da nota, schema da API): `shared/`. Plano do backend em [`../docs/plano-backend.md`](../docs/plano-backend.md).
 - **API:** rotas em `server/routes/`, acesso ao banco em `server/repositories/`, tabelas em `server/db/schema.ts`.
 - **Chamadas do front:** `src/services/` (cliente tipado `hc`, tradução dos campos para português, mensagens de erro em `erros.ts`).

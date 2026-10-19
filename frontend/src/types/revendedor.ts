@@ -5,7 +5,6 @@ export type StatusHealth = HealthStatus;
 export interface Revendedor {
   id: string;
   nomeEmpresa: string;
-  cnpj: string; // apenas dígitos
   responsavel: string;
   contato: string; // apenas dígitos
   email: string;
@@ -18,5 +17,5 @@ export interface Revendedor {
 
 export type DadosRevendedor = Pick<
   Revendedor,
-  "nomeEmpresa" | "cnpj" | "responsavel" | "contato" | "email" | "criteriosMarcados"
+  "nomeEmpresa" | "responsavel" | "contato" | "email" | "criteriosMarcados"
 >;

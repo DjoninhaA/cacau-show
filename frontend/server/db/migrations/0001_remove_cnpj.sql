@@ -1,0 +1,1 @@
+ALTER TABLE "resellers" DROP COLUMN "cnpj";

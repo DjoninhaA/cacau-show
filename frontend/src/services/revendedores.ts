@@ -8,7 +8,6 @@ function deApi(r: Reseller): Revendedor {
   return {
     id: r.id,
     nomeEmpresa: r.companyName,
-    cnpj: r.cnpj,
     responsavel: r.contactName,
     contato: r.phone,
     email: r.email,
@@ -23,7 +22,6 @@ function deApi(r: Reseller): Revendedor {
 function paraApi(d: DadosRevendedor) {
   return {
     companyName: d.nomeEmpresa,
-    cnpj: d.cnpj,
     contactName: d.responsavel,
     phone: d.contato,
     email: d.email,

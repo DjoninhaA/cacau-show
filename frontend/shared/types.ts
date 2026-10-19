@@ -12,7 +12,6 @@ export interface Criterion {
 export interface Reseller {
   id: string;
   companyName: string;
-  cnpj: string; // digits only
   contactName: string;
   phone: string; // digits only
   email: string;

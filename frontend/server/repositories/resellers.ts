@@ -13,7 +13,6 @@ function toReseller(row: Row): Reseller {
   return {
     id: row.id,
     companyName: row.companyName,
-    cnpj: row.cnpj,
     contactName: row.contactName,
     phone: row.phone,
     email: row.email,

@@ -79,7 +79,7 @@ Objetivo: separar as regras de negócio em `shared/`, sem mudar o comportamento 
   - `criteria.ts` — `CRITERIA` (`{ id, label, type: "positive" | "negative" }`), ids em inglês, rótulos em português
   - `bands.ts` — `BANDS` e `bandForStatus()`, status `"red" | "yellow" | "green"`
   - `healthScore.ts` — `calculateHealthScore()` e `knownCriteria()`
-  - `validation.ts` — `onlyDigits()`, `isValidCnpj()`
+  - `validation.ts` — `onlyDigits()`
   - `resellerSchema.ts` — Zod do payload da API (somente dígitos)
   - `types.ts` — `HealthStatus`, `Reseller`, `ResellerInput`
 - [ ] Remover `src/config/` e `src/utils/healthScore.ts`; ajustar imports do front.
@@ -122,7 +122,6 @@ Objetivo: separar as regras de negócio em `shared/`, sem mudar o comportamento 
 |---|---|---|
 | `id` | uuid | `id` |
 | `company_name` | text | `nomeEmpresa` |
-| `cnpj` | char(14) | `cnpj` |
 | `contact_name` | text | `responsavel` |
 | `phone` | varchar(11) | `contato` |
 | `email` | text | `email` |
@@ -209,7 +208,7 @@ Todas as rotas atrás de `requireAuth`:
 
 ## Fase 5 — Testes e deploy
 
-- [ ] Vitest: `calculateHealthScore`, `isValidCnpj`.
+- [ ] Vitest: `calculateHealthScore`.
 - [ ] Rotas com `app.request()` contra uma branch de teste do Neon:
   - login certo/errado; logout invalida a sessão
   - todas as rotas de revendedores sem cookie → `401`
@@ -244,4 +243,4 @@ Fora do código (lista de verificação):
 - Telas de troca e recuperação de senha
 - Bloqueio por tentativas de senha
 - Cadastro de critérios pela tela
-- CNPJ único, importação do `localStorage`, histórico de notas
+- Importação do `localStorage`, histórico de notas

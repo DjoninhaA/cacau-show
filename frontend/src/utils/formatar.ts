@@ -12,16 +12,6 @@ export function formatarTelefone(valor: string): string {
   return `(${ddd}) ${resto.slice(0, corte)}-${resto.slice(corte)}`;
 }
 
-// Máscara 00.000.000/0000-00, aplicada enquanto digita.
-export function formatarCnpj(valor: string): string {
-  const d = onlyDigits(valor).slice(0, 14);
-  return d
-    .replace(/^(\d{2})(\d)/, "$1.$2")
-    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-    .replace(/\.(\d{3})(\d)/, ".$1/$2")
-    .replace(/(\d{4})(\d)/, "$1-$2");
-}
-
 // Para busca sem diferenciar maiúsculas e acentos.
 export function normalizar(texto: string): string {
   return texto.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().trim();
