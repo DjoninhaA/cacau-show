@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import App from "./App";
 import { TelaLogin } from "./components/TelaLogin";
 import { eu, sair, type Usuario } from "./services/auth";
-import { mensagemDeErro } from "./services/erros";
 
 // Decide entre a tela de login e o app. undefined = ainda verificando a sessão.
 export default function Raiz() {
@@ -12,8 +11,9 @@ export default function Raiz() {
   useEffect(() => {
     eu()
       .then(setUsuario)
-      .catch((erro) => {
-        setAviso(mensagemDeErro(erro));
+      // Falha aqui é do servidor (ou da rede), não de algo que a pessoa digitou.
+      .catch(() => {
+        setAviso("O servidor não respondeu. Recarregue a página em instantes.");
         setUsuario(null);
       });
   }, []);

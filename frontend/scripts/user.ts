@@ -70,7 +70,7 @@ try {
   else if (command === "password") await changePassword();
   else throw new Error("Uso: tsx scripts/user.ts <create|password>");
 } catch (err) {
-  console.error(err instanceof Error ? err.message : err);
+  console.error(err instanceof Error ? (err.cause instanceof Error ? err.cause.message : err.message) : err);
   process.exitCode = 1;
 } finally {
   rl.close();

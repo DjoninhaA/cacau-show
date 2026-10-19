@@ -18,11 +18,6 @@ body {
   }
 }
 
-@keyframes deslizar-entrada {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-
 @keyframes aparecer {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -31,10 +26,6 @@ body {
 @keyframes subir {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-@utility animate-deslizar {
-  animation: deslizar-entrada 220ms ease-out;
 }
 
 @utility animate-aparecer {

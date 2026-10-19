@@ -111,7 +111,7 @@ export function PainelRevendedor({ revendedor, onSalvar, onExcluir, onFechar }: 
   const titulo = revendedor ? revendedor.nomeEmpresa : "Novo revendedor";
 
   return (
-    <div className="fixed inset-0 z-40" onKeyDown={aoPressionarTecla}>
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4" onKeyDown={aoPressionarTecla}>
       <div className="absolute inset-0 animate-aparecer bg-stone-900/30" onClick={tentarFechar} />
 
       <div
@@ -119,7 +119,7 @@ export function PainelRevendedor({ revendedor, onSalvar, onExcluir, onFechar }: 
         role="dialog"
         aria-modal="true"
         aria-labelledby="painel-titulo"
-        className="absolute inset-y-0 right-0 flex w-full animate-deslizar flex-col bg-white shadow-2xl sm:max-w-md"
+        className="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-lg animate-subir flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"
       >
         <header className="flex items-center justify-between gap-4 border-b border-stone-100 px-6 py-4">
           <h2 id="painel-titulo" className="truncate text-xl font-semibold text-cacau">

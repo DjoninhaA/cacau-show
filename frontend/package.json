@@ -11,7 +11,7 @@
     "dev:web": "vite",
     "dev:api": "tsx watch server/dev.ts",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "tsx scripts/migrate.ts",
     "user:create": "tsx scripts/user.ts create",
     "user:password": "tsx scripts/user.ts password"
   },
