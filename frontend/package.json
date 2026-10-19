@@ -4,27 +4,42 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently -k -n api,web -c yellow,cyan \"npm:dev:api\" \"npm:dev:web\"",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:web": "vite",
+    "dev:api": "tsx watch server/dev.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "user:create": "tsx scripts/user.ts create",
+    "user:password": "tsx scripts/user.ts password"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.9.1",
     "@hookform/resolvers": "^5.9.1",
+    "@neondatabase/serverless": "^1.2.0",
+    "drizzle-orm": "^0.45.4",
+    "hono": "^4.13.13",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.90.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@hono/node-server": "^2.1.5",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "concurrently": "^9.2.5",
+    "drizzle-kit": "^0.31.11",
     "oxlint": "^1.81.0",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "~6.0.2",
+    "vercel": "^64.0.2",
     "vite": "^8.3.0"
   }
 }

@@ -5,13 +5,21 @@ import { ListaRevendedores } from "./components/ListaRevendedores";
 import { PainelRevendedor } from "./components/PainelRevendedor";
 import { ResumoStatus } from "./components/ResumoStatus";
 import { Toast, type ToastDados } from "./components/Toast";
+import type { Usuario } from "./services/auth";
+import { mensagemDeErro, sessaoExpirada } from "./services/erros";
 import * as servico from "./services/revendedores";
 import type { DadosRevendedor, Revendedor, StatusHealth } from "./types/revendedor";
 import { normalizar } from "./utils/formatar";
 
 type Painel = { revendedor: Revendedor | null } | null;
 
-export default function App() {
+interface Props {
+  usuario: Usuario;
+  onSair: () => void;
+  onSessaoExpirada: () => void;
+}
+
+export default function App({ usuario, onSair, onSessaoExpirada }: Props) {
   const [revendedores, setRevendedores] = useState<Revendedor[]>([]);
   const [carregado, setCarregado] = useState(false);
   const [filtro, setFiltro] = useState<StatusHealth | null>(null);
@@ -19,19 +27,32 @@ export default function App() {
   const [painel, setPainel] = useState<Painel>(null);
   const [toast, setToast] = useState<ToastDados | null>(null);
 
-  const recarregar = useCallback(async () => {
-    setRevendedores(await servico.listar());
-    setCarregado(true);
-  }, []);
-
-  useEffect(() => {
-    recarregar();
-  }, [recarregar]);
-
   const mostrarToast = useCallback((mensagem: string, acao?: ToastDados["acao"]) => {
     setToast({ id: Date.now(), mensagem, acao });
   }, []);
   const fecharToast = useCallback(() => setToast(null), []);
+
+  // Sessão expirada volta para o login; os demais erros aparecem no toast.
+  const tratarErro = useCallback(
+    (erro: unknown) => {
+      if (sessaoExpirada(erro)) onSessaoExpirada();
+      else mostrarToast(mensagemDeErro(erro));
+    },
+    [onSessaoExpirada, mostrarToast],
+  );
+
+  const recarregar = useCallback(async () => {
+    try {
+      setRevendedores(await servico.listar());
+      setCarregado(true);
+    } catch (erro) {
+      tratarErro(erro);
+    }
+  }, [tratarErro]);
+
+  useEffect(() => {
+    recarregar();
+  }, [recarregar]);
 
   const visiveis = useMemo(() => {
     const termo = normalizar(busca);
@@ -45,22 +66,38 @@ export default function App() {
 
   const abrirNovo = () => setPainel({ revendedor: null });
 
+  // Em caso de erro o painel continua aberto, sem perder o que foi digitado.
   async function salvar(dados: DadosRevendedor) {
-    if (painel?.revendedor) await servico.atualizar(painel.revendedor.id, dados);
-    else await servico.criar(dados);
+    try {
+      if (painel?.revendedor) await servico.atualizar(painel.revendedor.id, dados);
+      else await servico.criar(dados);
+    } catch (erro) {
+      tratarErro(erro);
+      return;
+    }
     await recarregar();
     setPainel(null);
     mostrarToast("Revendedor salvo");
   }
 
   async function excluir(revendedor: Revendedor) {
-    await servico.excluir(revendedor.id);
+    try {
+      await servico.excluir(revendedor.id);
+    } catch (erro) {
+      tratarErro(erro);
+      return;
+    }
     await recarregar();
     setPainel(null);
     mostrarToast("Revendedor excluído", {
       label: "Desfazer",
       onClick: async () => {
-        await servico.restaurar(revendedor);
+        try {
+          await servico.restaurar(revendedor);
+        } catch (erro) {
+          tratarErro(erro);
+          return;
+        }
         await recarregar();
         mostrarToast("Revendedor restaurado");
       },
@@ -78,13 +115,25 @@ export default function App() {
         <h1 className="text-2xl font-bold text-cacau sm:text-3xl">
           <span aria-hidden>🍫 </span>Revendedores
         </h1>
-        <button
-          type="button"
-          onClick={abrirNovo}
-          className="rounded-xl bg-cacau px-5 py-2.5 font-semibold text-white shadow-sm transition hover:bg-cacau-escuro focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cacau"
-        >
-          + Novo revendedor
-        </button>
+        <div className="flex flex-wrap items-center gap-4">
+          <span className="text-sm text-stone-600">
+            Olá, {usuario.name}
+            <button
+              type="button"
+              onClick={onSair}
+              className="ml-3 rounded-md px-1 font-medium text-stone-500 underline-offset-4 hover:text-cacau hover:underline focus-visible:outline-2 focus-visible:outline-cacau"
+            >
+              Sair
+            </button>
+          </span>
+          <button
+            type="button"
+            onClick={abrirNovo}
+            className="rounded-xl bg-cacau px-5 py-2.5 font-semibold text-white shadow-sm transition hover:bg-cacau-escuro focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cacau"
+          >
+            + Novo revendedor
+          </button>
+        </div>
       </header>
 
       {carregado && revendedores.length === 0 ? (

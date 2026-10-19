@@ -1,4 +1,6 @@
-export type StatusHealth = "vermelho" | "amarelo" | "verde";
+import type { HealthStatus } from "../../shared/types";
+
+export type StatusHealth = HealthStatus;
 
 export interface Revendedor {
   id: string;

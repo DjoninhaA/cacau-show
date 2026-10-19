@@ -3,8 +3,9 @@ import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import type { DadosRevendedor, Revendedor } from "../types/revendedor";
-import { apenasDigitos, cnpjValido, formatarCnpj, formatarTelefone } from "../utils/formatar";
-import { criteriosValidos } from "../utils/healthScore";
+import { knownCriteria } from "../../shared/healthScore";
+import { isValidCnpj, onlyDigits } from "../../shared/validation";
+import { formatarCnpj, formatarTelefone } from "../utils/formatar";
 import { CardNota } from "./CardNota";
 import { ChecklistCriterios } from "./ChecklistCriterios";
 import { DialogoConfirmacao } from "./DialogoConfirmacao";
@@ -13,11 +14,11 @@ const esquema = z.object({
   nomeEmpresa: z.string().trim().min(2, "Informe o nome da empresa (pelo menos 2 letras)"),
   cnpj: z
     .string()
-    .refine((v) => apenasDigitos(v).length > 0, "Informe o CNPJ")
-    .refine((v) => apenasDigitos(v).length === 0 || cnpjValido(v), "Confira o CNPJ, ele parece incorreto"),
+    .refine((v) => onlyDigits(v).length > 0, "Informe o CNPJ")
+    .refine((v) => onlyDigits(v).length === 0 || isValidCnpj(v), "Confira o CNPJ, ele parece incorreto"),
   responsavel: z.string().trim().min(2, "Informe o nome do responsável (pelo menos 2 letras)"),
   contato: z.string().refine((v) => {
-    const n = apenasDigitos(v).length;
+    const n = onlyDigits(v).length;
     return n === 10 || n === 11;
   }, "Informe o telefone com DDD, ex.: (11) 98765-4321"),
   email: z.string().trim().min(1, "Informe o e-mail").pipe(z.email("Informe um e-mail válido")),
@@ -54,7 +55,7 @@ export function PainelRevendedor({ revendedor, onSalvar, onExcluir, onFechar }: 
       responsavel: revendedor?.responsavel ?? "",
       contato: formatarTelefone(revendedor?.contato ?? ""),
       email: revendedor?.email ?? "",
-      criteriosMarcados: criteriosValidos(revendedor?.criteriosMarcados ?? []),
+      criteriosMarcados: knownCriteria(revendedor?.criteriosMarcados ?? []),
     },
   });
 
@@ -99,9 +100,9 @@ export function PainelRevendedor({ revendedor, onSalvar, onExcluir, onFechar }: 
   async function enviar(valores: Valores) {
     await onSalvar({
       nomeEmpresa: valores.nomeEmpresa,
-      cnpj: apenasDigitos(valores.cnpj),
+      cnpj: onlyDigits(valores.cnpj),
       responsavel: valores.responsavel,
-      contato: apenasDigitos(valores.contato),
+      contato: onlyDigits(valores.contato),
       email: valores.email.toLowerCase(),
       criteriosMarcados: valores.criteriosMarcados,
     });
